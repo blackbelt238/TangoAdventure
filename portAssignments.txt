@@ -1,5 +1,0 @@
-0 - waist
-1 - wheels (same direction)
-2 - wheels (opposite direction)
-3 - neck(side/side)
-4 - neck(up/down)
