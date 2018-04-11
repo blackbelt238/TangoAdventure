@@ -2,8 +2,8 @@ import die
 
 class Character:
     ''' Character represents an agent in the adventure '''
-
     def __init__(self, damage_die, hp, level, name, xp):
+        self.backpack = []           # items the character is holding
         self.damage_die = damage_die # die to use for damage rolls
         self.hp = hp                 # current hit points; start at full health
         self.hp_max = hp             # max number of points of damage a character can endure
