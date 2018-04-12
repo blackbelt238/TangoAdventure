@@ -24,8 +24,9 @@ class Key(Item):
         self.number = number # chest number that this key unlocks
 
 class RadiantPool(Item):
-    def __init__(self):
+    def __init__(self, amount):
         Item.__init__(self, 'radiant pool')
+        self.amount = amount
 
     def cleanse(self, character):
-        character.heal_for(100)
+        character.heal_for(self.amount)
