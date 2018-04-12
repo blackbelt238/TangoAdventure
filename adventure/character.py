@@ -19,9 +19,9 @@ class Character:
         self.xp += gained
         # if the character levels up
         if self.xp > 10:
-            self.level += 1       # increase the level
-            self.xp -= 10        # leave only left-over XP
-            self.hp += self.level # increase HP by the character's level
+            self.level += 1                # increase the level
+            self.xp -= 10                  # leave only left-over XP
+            self.hp_max += self.damage_die # increase HP cap by the number of sides on the damage die
 
     def heal_for(self, points):
         ''' heal_for heals the character the given amount '''
@@ -41,4 +41,4 @@ class Character:
 
     def xp_worth(self):
         ''' xp_worth calculates how much XP a character is worth '''
-        return level
+        return self.level

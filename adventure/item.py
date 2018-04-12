@@ -1,7 +1,7 @@
 class Item:
     ''' Item represents an encounterable item within the adventure '''
-    def __init__(self, type):
-        self.type = type # the item's type
+    def __init__(self, t):
+        self.type = t # the item's type
 
     def __str__(self):
         return self.type

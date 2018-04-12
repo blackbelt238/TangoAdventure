@@ -10,19 +10,19 @@ class Map:
 
     def __str__(self):
         ''' the string representation of a map is just the cell ids arranged in grid form '''
-        map = ''
+        ms = ''
         map_info = ''
         for row in self.cells:
             for cell in row:
-                map += str(cell) + ' '
+                ms += str(cell) + ' '
                 for character in cell.npcs:
                     map_info += str(cell) + ' ' + str(character) + '\n'
                 for item in cell.items:
                     map_info += str(cell) + ' ' + str(item) + '\n'
                 if cell.start:
                     map_info += str(cell) + ' start\n'
-            map += '\n'
-        return map + map_info
+            ms += '\n'
+        return ms + map_info
 
     def init_map(self, filename):
         ''' read_map goes to the given file and parses out map details '''
@@ -40,9 +40,9 @@ class Map:
             for col in range(len(self.cells[row])):
                 self.cells[row][col] = Cell(cell_info[col]) # instantiate a Cell with the id logged in the cell_info
 
-        info = self.read_map_info(map_file) # get all the information to be added to the map (chars, items, etc.)
-        map_file.close()                    # close the map file
-        self.populate_map(info)             # populate the map with the infomration from the file
+        info = Map.read_map_info(map_file) # get all the information to be added to the map (chars, items, etc.)
+        map_file.close()                   # close the map file
+        self.populate_map(info)            # populate the map with the infomration from the file
 
     def populate_map(self, info):
         ''' populate_map takes the given information and adds it into the map '''
@@ -50,7 +50,7 @@ class Map:
         for row in range(len(self.cells)):
             for col in range(len(self.cells[row])):
                 cell_info = info[self.cells[row][col].id] # extract info to add to this cells
-                
+
                 for new_info in cell_info:
                     # if a character is to be added to the cell, add it to the list of NPCs in the cell
                     if isinstance(new_info, Character):
@@ -63,7 +63,7 @@ class Map:
                         if new_info == 'start':
                             self.cells[row][col].start = True
 
-    def read_map_info(self, map_file):
+    def read_map_info(map_file):
         ''' read_map_info reads the remainder of the map file to extract the information to be added to the map '''
         info = defaultdict(list) # all information to be added to the map
 
@@ -112,8 +112,8 @@ class Map:
 
 class Cell:
     ''' Cell represents a single visitable location in a Map '''
-    def __init__(self, id):
-        self.id = id    # id of the cell
+    def __init__(self, cell_id):
+        self.id = cell_id    # id of the cell
         self.items = [] # items in the cell
         self.npcs = []  # characters in the cell
         self.start = False
