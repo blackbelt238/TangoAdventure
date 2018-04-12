@@ -11,11 +11,18 @@ class Map:
     def __str__(self):
         ''' the string representation of a map is just the cell ids arranged in grid form '''
         map = ''
+        map_info = ''
         for row in self.cells:
             for cell in row:
                 map += str(cell) + ' '
+                for character in cell.npcs:
+                    map_info += str(cell) + ' ' + str(character) + '\n'
+                for item in cell.items:
+                    map_info += str(cell) + ' ' + str(item) + '\n'
+                if cell.start:
+                    map_info += str(cell) + ' start\n'
             map += '\n'
-        return map
+        return map + map_info
 
     def init_map(self, filename):
         ''' read_map goes to the given file and parses out map details '''
@@ -39,7 +46,22 @@ class Map:
 
     def populate_map(self, info):
         ''' populate_map takes the given information and adds it into the map '''
-        return
+        # populate each cell with its' respective information
+        for row in range(len(self.cells)):
+            for col in range(len(self.cells[row])):
+                cell_info = info[self.cells[row][col].id] # extract info to add to this cells
+                
+                for new_info in cell_info:
+                    # if a character is to be added to the cell, add it to the list of NPCs in the cell
+                    if isinstance(new_info, Character):
+                        self.cells[row][col].npcs.append(new_info)
+                    # if info to be added is an item, add it to the list of items in the cell
+                    elif isinstance(new_info, item.Item):
+                        self.cells[row][col].items.append(new_info)
+                    # if any stringified information must be added, do so
+                    else:
+                        if new_info == 'start':
+                            self.cells[row][col].start = True
 
     def read_map_info(self, map_file):
         ''' read_map_info reads the remainder of the map file to extract the information to be added to the map '''
