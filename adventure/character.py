@@ -11,6 +11,9 @@ class Character:
         self.name = name
         self.xp = xp                 # all characters start with 0 xp
 
+    def __str__(self):
+        return self.name
+
     def gain_xp(self, gained):
         ''' gain_xp enables the character to gain XP, leveling the character up if necessary '''
         self.xp += gained

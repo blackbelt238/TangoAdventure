@@ -3,6 +3,9 @@ class Item:
     def __init__(self, type):
         self.type = type # the item's type
 
+    def __str__(self):
+        return self.type
+
 class Chest(Item):
     ''' Chest represents the win condition for the game '''
     def __init__(self, number):
