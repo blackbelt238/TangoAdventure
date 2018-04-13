@@ -84,12 +84,12 @@ class Map:
             if info_type == 'character':
                 attrs = map_line.split()
                 damage_die = int(attrs[0])
-                hp = int(attrs[1])
-                level = int(attrs[2])
-                name = attrs[3]
-                xp = int(attrs[4])
+                damage_dice_num = int(attrs[1])
+                hp_max = int(attrs[2])
+                level = int(attrs[3])
+                name = attrs[4]
 
-                new_info = Character(damage_die, hp, level, name, xp)
+                new_info = Character(damage_die, damage_dice_num, hp_max, level, name)
             elif info_type == 'item':
                 attrs = map_line.split()
                 item_type = attrs[0]

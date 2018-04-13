@@ -1,9 +1,10 @@
+from adventurer import Adventurer
 from map import Map
 
 class Adventure:
     def __init__(self, map_file_name, create_character):
-        self.player = None
-        self.world = Map(map_file_name) # load the given map as the world for the adventure
+        self.player = Adventurer('Tango', 'fighter') # default character
+        self.world = Map(map_file_name)              # load the given map as the world for the adventure
         if create_character:
             self.create_character()
 
@@ -12,6 +13,7 @@ class Adventure:
 
     def start(self):
         ''' start kicks off an adventure '''
+        print('Starting', self.player, 'in:')
         print(self.world)
 
 def main():
