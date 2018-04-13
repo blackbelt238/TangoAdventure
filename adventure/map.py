@@ -93,14 +93,15 @@ class Map:
             elif info_type == 'item':
                 attrs = map_line.split()
                 item_type = attrs[0]
+                arg = int(attrs[1]) # info to pass to the constructor
                 if item_type == 'chest':
-                    new_info = item.Chest(int(attrs[1]))
+                    new_info = item.Chest(arg) # pass in the chest number
                 elif item_type == 'key':
-                    new_info = item.Key(int(attrs[1]))
+                    new_info = item.Key(arg) # pass in the key number
                 elif item_type == 'radiantpool':
-                    new_info = item.RadiantPool()
+                    new_info = item.RadiantPool(arg) # pass in the max amount of healing
                 else:
-                    new_info = item_type
+                    # not a valid item, so just return
                     return
             else:
                 # directly add any other info
@@ -138,8 +139,9 @@ class Cell:
         ''' is_wall determines if this cell is a wall '''
         return self.id == '#'
 
-def main():
-    m = Map('map1.txt')
-    print(m, end='')
-
-main()
+# NOTE: can remove main after testing is complete
+# def main():
+#     m = Map('map1.txt')
+#     print(m, end='')
+#
+# main()
