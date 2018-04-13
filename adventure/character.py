@@ -5,7 +5,7 @@ class Character:
     def __init__(self, damage_die, damage_dice_num, hp_max, level, name):
         self.damage_die = damage_die          # die to use for damage rolls
         self.damage_die_num = damage_dice_num # number of damage dice to roll
-        self.hp_max = hp                      # max points of damage a character can endure; determined from class
+        self.hp_max = hp_max                  # max points of damage a character can endure; determined from class
         self.hp = self.hp_max                 # current hit points; start at full health
         self.level = level                    # character level buffs damage rolls
         self.name = name
