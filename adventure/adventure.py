@@ -31,6 +31,10 @@ class Adventure:
         print(self.world)
         print('Starting', self.player, 'at (' + str(self.player_x) + ',' + str(self.player_y) + ')')
 
+    def visit_location(self):
+        # Combat
+        # Loop thru options
+
 def main():
     adv = Adventure('map1.txt', False)
     adv.start()
