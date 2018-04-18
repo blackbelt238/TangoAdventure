@@ -24,6 +24,16 @@ class Map:
             ms += '\n'
         return ms + map_info
 
+    def get_starting_cells(self):
+        ''' get_starting_cells returns a list of the coordinates of cells that can be started in '''
+        start_coords = []
+        for y, row in enumerate(self.cells):
+            for x, cell in enumerate(row):
+                # if this cell can be a starting cell, add its' coords to the list
+                if cell.start:
+                    start_coords.append((x,y))
+        return start_coords
+
     def init_map(self, filename):
         ''' read_map goes to the given file and parses out map details '''
         map_file = open(filename,'r')  # open the map file
@@ -130,9 +140,9 @@ class Cell:
         ''' add_item adds the given item to the list of items in this cell '''
         self.items.append(item)
 
-    def is_passthrough(self):
-        ''' is_passthrough determines if the cell is one that is passed through during traversal.
-            A passthrough cell is not visited, it is simply used to access visitable cells '''
+    def is_road(self):
+        ''' is_road determines if the cell is one that is passed through during traversal.
+            A road is not visited, it is simply traversed to access visitable cells '''
         return self.id == '_'
 
     def is_wall(self):
