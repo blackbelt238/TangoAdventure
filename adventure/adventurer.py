@@ -35,14 +35,18 @@ class Adventurer(Character):
 class Class:
     ''' Class represents an adventurer's class. It determines the character's hit die and damage di(c)e '''
     def __init__(self, name):
-        self.name = name
         self.damage_die = None  # die to use for damage rolls
         self.damage_dice_num = 1 # number of dice to roll for damage
         self.hit_die = None
+        self.name = name
         self.setup_class()
 
     def __str__(self):
         return self.name.capitalize()
+
+    def roll_hit_die(self):
+        ''' roll_hit_die performs an HP roll for the character (calculating HP to add to the character's max after leveling up) '''
+        return die.roll(self.hit_die)
 
     def setup_class(self):
         if self.name == 'fighter':
@@ -54,7 +58,3 @@ class Class:
             # wizards attack with 'burning hands' spell
             self.damage_die = 6
             self.damage_dice_num = 3
-
-    def roll_hit_die(self):
-        ''' roll_hit_die performs an HP roll for the character (calculating HP to add to the character's max after leveling up) '''
-        return die.roll(self.hit_die)
