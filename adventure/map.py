@@ -24,6 +24,16 @@ class Map:
             ms += '\n'
         return ms + map_info
 
+    def get_starting_cells(self):
+        ''' get_starting_cells returns a list of the coordinates of cells that can be started in '''
+        start_coords = []
+        for y, row in enumerate(self.cells):
+            for x, cell in enumerate(row):
+                # if this cell can be a starting cell, add its' coords to the list
+                if cell.start:
+                    start_coords.append((x,y))
+        return start_coords
+
     def init_map(self, filename):
         ''' read_map goes to the given file and parses out map details '''
         map_file = open(filename,'r')  # open the map file
