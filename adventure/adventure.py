@@ -38,6 +38,24 @@ class Adventure:
             moves += 1
         print('You ran out of moves!')
 
+    def travel_options(self):
+        ''' travel_options returns a list of valid options for leaving the current cell '''
+        opt = []
+
+        # north
+        if not (self.player_y-1 < 0) and self.world[self.player_y-1][self.player_x] != '#':
+            opt.append('North')
+        # east
+        elif not (self.player_x+1 > len(self.world[self.player_y])) and self.world[self.player_y][self.player_x+1] != '#':
+            opt.append('East')
+        # south
+        elif not (self.player_y+1 > len(self.world)) and self.world[self.player_y+1][self.player_x] != '#':
+            opt.append('South')
+        # west
+        elif not (self.player_x-1 < 0) and self.world[self.player_y][self.player_x-1] != '#':
+            opt.append('West')
+        return opt
+
     def visit_combat(self):
         ''' visit_combat performs combat for the current cell '''
 
@@ -49,6 +67,7 @@ class Adventure:
 
     def visit_options(self):
         ''' visit_options presents the player with all post-combat options '''
+        opt = self.travel_options() # directions player can travel from current location
 
 def main():
     adv = Adventure('map1.txt', False)
