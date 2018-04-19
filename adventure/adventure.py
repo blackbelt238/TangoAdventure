@@ -31,6 +31,17 @@ class Adventure:
         print(self.world)
         print('Starting', self.player, 'at (' + str(self.player_x) + ',' + str(self.player_y) + ')')
 
+    def visit_combat(self):
+        ''' visit_combat performs combat for the current cell '''
+
+    def visit_location(self):
+        ''' visit_location enables the player to visit a location '''
+        self.visit_combat()  # combat happens immediately
+        self.visit_options() # prompt user with post-combat options
+
+    def visit_options(self):
+        ''' visit_options presents the player with all post-combat options '''
+
 def main():
     adv = Adventure('map1.txt', False)
     adv.start()
