@@ -31,11 +31,19 @@ class Adventure:
         print(self.world)
         print('Starting', self.player, 'at (' + str(self.player_x) + ',' + str(self.player_y) + ')')
 
+        # keep visiting locations until the move count runs out
+        moves = 0
+        while moves < 20:
+            self.visit_location()
+            moves += 1
+        print('You ran out of moves!')
+
     def visit_combat(self):
         ''' visit_combat performs combat for the current cell '''
 
     def visit_location(self):
         ''' visit_location enables the player to visit a location '''
+        print('visiting:', self.player_x, self.player_y)
         self.visit_combat()  # combat happens immediately
         self.visit_options() # prompt user with post-combat options
 
