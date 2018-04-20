@@ -18,11 +18,6 @@ class Adventure:
         self.won = False                             # has the player beaten the adventure?
 
         self.determine_start()
-        if create_character:
-            self.create_character()
-
-    def create_character(self):
-        return
 
     def determine_start(self):
         ''' determine_start figures out where the game will start on the map '''
@@ -41,7 +36,7 @@ class Adventure:
         # print('Starting', self.player, 'at (' + str(self.player_x) + ',' + str(self.player_y) + ')')
 
         # keep visiting locations until the move count runs out
-        moves = 10
+        moves = 20
         while not self.won and self.player.hp > 0 and moves > 0:
             self.visit_location()
             moves -= 1
@@ -146,6 +141,7 @@ class Adventure:
                 # player has a 75% chance to successfully run
                 if die.roll(4) > 1:
                     print('\t\tSuccessfully ran away.')
+                    self.determine_start()
                     break
                 else:
                     print('\t\tCannot escape!')
