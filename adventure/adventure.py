@@ -123,9 +123,7 @@ class Adventure:
 
     def visit_combat(self):
         ''' visit_combat performs combat for the current cell '''
-        # sort the NPCs by level (high-to-low)
-        self.world.cells[self.player_y][self.player_x].npcs.sort(key=lambda c: c.level, reverse=True)
-        targets = []
+        targets = [] # list of the names of possible targets
         print('You are attacked!',end='')
         for enemy in self.world.cells[self.player_y][self.player_x].npcs:
             print(enemy, end=' ')
@@ -146,8 +144,13 @@ class Adventure:
 
             # player attack phase
             choice = input('\tChoose a target: ').lower()
+            while targets.count(choice) == 0:
+                print('\tInvalid target.')
+                choice = input('\tChoose a target: ').lower()
+
             target = self.world.cells[self.player_y][self.player_x].get_npc_by_name(choice)
             player_dmg = self.player.roll_damage()
+            
             # if the target dies as a result of the damage, remove it from the cell
             if not target.take_damage(player_dmg):
                 # if player levels up due to the XP
