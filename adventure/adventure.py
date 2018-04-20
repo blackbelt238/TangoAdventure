@@ -123,6 +123,12 @@ class Adventure:
 
     def visit_combat(self):
         ''' visit_combat performs combat for the current cell '''
+        # sort the NPCs by level (high-to-low)
+        self.world.cells[self.player_y][self.player_x].npcs.sort(key=lambda c: c.level, reverse=True)
+        # print('Fighting:',end=' ')
+        # for enemy in self.world.cells[self.player_y][self.player_x].npcs:
+        #     print(enemy, end=' ')
+        # print()
 
     def visit_location(self):
         ''' visit_location enables the player to visit a location '''
