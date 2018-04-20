@@ -10,12 +10,12 @@ class Adventure:
     SOUTH = [0, 1]
     WEST = [-1, 0]
 
-    def __init__(self, map_file_name, create_character):
-        self.player = Adventurer('Tango', 'fighter') # default character
-        self.player_x = 0                            # player's current x-coord
-        self.player_y = 0                            # player's current y-coord
-        self.world = Map(map_file_name)              # load the given map as the world for the adventure
-        self.won = False                             # has the player beaten the adventure?
+    def __init__(self, map_file_name, class_name):
+        self.player = Adventurer('Tango', class_name) # default character
+        self.player_x = 0                             # player's current x-coord
+        self.player_y = 0                             # player's current y-coord
+        self.world = Map(map_file_name)               # load the given map as the world for the adventure
+        self.won = False                              # has the player beaten the adventure?
 
         self.determine_start()
 
@@ -206,6 +206,6 @@ class Adventure:
         self.visit_action(opt)
 
 def main():
-    adv = Adventure('map1.txt', False)
+    adv = Adventure('map1.txt', 'fighter')
     adv.start()
 main()
