@@ -125,10 +125,40 @@ class Adventure:
         ''' visit_combat performs combat for the current cell '''
         # sort the NPCs by level (high-to-low)
         self.world.cells[self.player_y][self.player_x].npcs.sort(key=lambda c: c.level, reverse=True)
-        # print('Fighting:',end=' ')
-        # for enemy in self.world.cells[self.player_y][self.player_x].npcs:
-        #     print(enemy, end=' ')
-        # print()
+        targets = []
+        print('You are attacked!',end='')
+        for enemy in self.world.cells[self.player_y][self.player_x].npcs:
+            print(enemy, end=' ')
+            targets.append(str(enemy))
+        print('enters combat with you.')
+
+        # as long as there are combatants, fight
+        while len(self.world.cells[self.player_y][self.player_x].npcs) > 0:
+            # player acts first
+            choice = input('\tYou have', self.player.hp,'hp. Attack or run? ').lower()
+            if choice == 'run':
+                # player has a 75% chance to successfully run
+                if die.roll(4) > 1:
+                    print('\t\tSuccessfully ran away.')
+                    break
+                else:
+                    print('\t\tCannot escape!')
+
+            # player attack phase
+            choice = input('\tChoose a target: ').lower()
+            target = self.world.cells[self.player_y][self.player_x].get_npc_by_name(choice)
+            player_dmg = self.player.roll_damage()
+            # if the target dies as a result of the damage, remove it from the cell
+            if not target.take_damage(player_dmg):
+                # if player levels up due to the XP
+                if self.player.gain_xp(target.xp_worth()):
+                    print('\t\tLevel up! You are now level', self.player.level)
+                self.world.cells[self.player_y][self.player_x].npcs.remove(target)
+
+                print('\t\t', target, 'evaporated!')
+                print('\t\tGained', target.xp_worth(), 'xp.')
+
+            # all NPCs hit
 
     def visit_location(self):
         ''' visit_location enables the player to visit a location '''
