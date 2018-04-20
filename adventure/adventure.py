@@ -74,7 +74,7 @@ class Adventure:
             # take in user choice and check if valid
             choice = input("What would you like to do? ").lower()
             if opt.count(choice) == 0:
-                print("Invalid choice. Try again.")
+                print("\tInvalid choice. Try again.")
                 continue
 
             # handle movement choice
