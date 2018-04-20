@@ -123,6 +123,9 @@ class Adventure:
 
     def visit_combat(self):
         ''' visit_combat performs combat for the current cell '''
+        if len(self.world.cells[self.player_y][self.player_x].npcs) == 0:
+            return True
+
         targets = [] # list of the names of possible targets
         print('You are attacked!',end='')
         for enemy in self.world.cells[self.player_y][self.player_x].npcs:
@@ -150,7 +153,7 @@ class Adventure:
 
             target = self.world.cells[self.player_y][self.player_x].get_npc_by_name(choice)
             player_dmg = self.player.roll_damage()
-            
+
             # if the target dies as a result of the damage, remove it from the cell
             if not target.take_damage(player_dmg):
                 # if player levels up due to the XP
@@ -162,6 +165,14 @@ class Adventure:
                 print('\t\tGained', target.xp_worth(), 'xp.')
 
             # all NPCs hit
+            for npc in self.world.cells[self.player_y][self.player_x].npcs:
+                npc_dmg = npc.roll_damage()
+                print('\t\tYou took',npc_dmg,'points of damage from', npc)
+                if not player.take_damage(npc_dmg):
+                    print('YOU DIED')
+                    return False
+        print('\tAll enemies defeated!')
+        return True
 
     def visit_location(self):
         ''' visit_location enables the player to visit a location '''
