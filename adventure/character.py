@@ -24,7 +24,7 @@ class Character:
             'Roll' the character's damage dice and then add the character's level to the result. '''
         damage = 0
         # roll as many damage dice as required
-        for _ in range(self.damage_die_num):
+        for _ in range(self.damage_dice_num):
             damage += die.roll(self.damage_die)
         return damage + self.level
 
