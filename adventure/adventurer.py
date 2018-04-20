@@ -21,6 +21,8 @@ class Adventurer(Character):
             self.hp_max += self.character_class.roll_hit_die() + self.level # increase HP cap by the number of sides on the damage die
             self.level += 1                                                 # gain a level
             self.xp -= 10                                                   # leave only left-over XP
+            return True
+        return False
 
     def init_class(self, class_name):
         ''' init_class initializes/updates an adventurer's information based on his chosen class '''

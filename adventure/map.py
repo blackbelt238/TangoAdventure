@@ -140,6 +140,12 @@ class Cell:
         ''' add_item adds the given item to the list of items in this cell '''
         self.items.append(item)
 
+    def get_npc_by_name(self, name):
+        for npc in self.npcs:
+            if npc.name == name:
+                return npc
+        return None
+
     def is_road(self):
         ''' is_road determines if the cell is one that is passed through during traversal.
             A road is not visited, it is simply traversed to access visitable cells '''
