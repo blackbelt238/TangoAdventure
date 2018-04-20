@@ -24,6 +24,12 @@ class Map:
             ms += '\n'
         return ms + map_info
 
+    def get_npc_by_name(self, name):
+        for npc in self.npcs:
+            if npc.name == name:
+                return npc
+        return None
+
     def get_starting_cells(self):
         ''' get_starting_cells returns a list of the coordinates of cells that can be started in '''
         start_coords = []

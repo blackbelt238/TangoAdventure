@@ -11,7 +11,7 @@ class Character:
         self.name = name
 
     def __str__(self):
-        return self.name
+        return self.name.capitalize()
 
     def heal_for(self, points):
         ''' heal_for heals the character the given amount '''
