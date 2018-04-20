@@ -41,14 +41,18 @@ class Adventure:
         # print('Starting', self.player, 'at (' + str(self.player_x) + ',' + str(self.player_y) + ')')
 
         # keep visiting locations until the move count runs out
-        moves = 0
-        while not self.won and moves < 10:
+        moves = 10
+        while not self.won and self.player.hp > 0 and moves > 0:
             self.visit_location()
-            moves += 1
+            moves -= 1
+
+        print()
         if self.won:
             print('The key unlocked the chest! You win!')
-        else:
+        elif moves == 0:
             print('You ran out of moves!')
+        else:
+            print('YOU DIED')
 
     def travel_options(self):
         ''' travel_options returns a list of valid options for leaving the current cell '''
@@ -127,16 +131,17 @@ class Adventure:
             return True
 
         targets = [] # list of the names of possible targets
-        print('You are attacked!',end='')
+        print('You are attacked!',end=' ')
         for enemy in self.world.cells[self.player_y][self.player_x].npcs:
             print(enemy, end=' ')
-            targets.append(str(enemy))
+            targets.append(str(enemy).lower())
         print('enters combat with you.')
 
         # as long as there are combatants, fight
         while len(self.world.cells[self.player_y][self.player_x].npcs) > 0:
             # player acts first
-            choice = input('\tYou have', self.player.hp,'hp. Attack or run? ').lower()
+            print('\tYou have', self.player.hp,'hp.', end=' ')
+            choice = input('Attack or run? ').lower()
             if choice == 'run':
                 # player has a 75% chance to successfully run
                 if die.roll(4) > 1:
@@ -153,6 +158,7 @@ class Adventure:
 
             target = self.world.cells[self.player_y][self.player_x].get_npc_by_name(choice)
             player_dmg = self.player.roll_damage()
+            print('\t\tDealt',player_dmg, 'damage to',target)
 
             # if the target dies as a result of the damage, remove it from the cell
             if not target.take_damage(player_dmg):
@@ -161,23 +167,23 @@ class Adventure:
                     print('\t\tLevel up! You are now level', self.player.level)
                 self.world.cells[self.player_y][self.player_x].npcs.remove(target)
 
-                print('\t\t', target, 'evaporated!')
+                print('\t\t' + str(target), 'evaporated!')
                 print('\t\tGained', target.xp_worth(), 'xp.')
 
             # all NPCs hit
             for npc in self.world.cells[self.player_y][self.player_x].npcs:
                 npc_dmg = npc.roll_damage()
                 print('\t\tYou took',npc_dmg,'points of damage from', npc)
-                if not player.take_damage(npc_dmg):
-                    print('YOU DIED')
+                if not self.player.take_damage(npc_dmg):
                     return False
-        print('\tAll enemies defeated!')
         return True
 
     def visit_location(self):
         ''' visit_location enables the player to visit a location '''
         # print(self.world.cells[self.player_y][self.player_x].id)
-        self.visit_combat()  # combat happens immediately
+        # combat happens immediately. return if player dies
+        if not self.visit_combat():
+            return
         self.visit_options() # prompt user with post-combat options
 
     def visit_options(self):
