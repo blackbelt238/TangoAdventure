@@ -33,22 +33,19 @@ class Adventure:
 
     def start(self):
         ''' start kicks off an adventure '''
-        # print(self.world)
-        # print('Starting', self.player, 'at (' + str(self.player_x) + ',' + str(self.player_y) + ')')
-
         # keep visiting locations until the move count runs out
         moves = 20
         while not self.won and self.player.hp > 0 and moves > 0:
             self.visit_location()
             moves -= 1
 
-        print()
+        # based on how game ended, inform Android
         if self.won:
-            print('The key unlocked the chest! You win!')
+            Client.sendMessage('win')
         elif moves == 0:
-            print('You ran out of moves!')
+            Client.sendMessage('no moves')
         else:
-            print('YOU DIED')
+            Client.sendMessage('died')
 
     def travel_options(self):
         ''' travel_options returns a list of valid options for leaving the current cell '''
@@ -70,56 +67,46 @@ class Adventure:
 
     def visit_action(self, opt):
         ''' visit_action handles the user's choice of action '''
-        while True:
-            # take in user choice and check if valid
-            choice = input("What would you like to do? ").lower()
-            if opt.count(choice) == 0:
-                print("\tInvalid choice. Try again.")
-                continue
+        # ask Android for user's choice. no validation necessary because Android will only present user with valid options
+        choice = Client.sendMessage('action:'+str(opt))
 
-            # handle movement choice
-            if choice == 'north':
-                self.move_player(Adventure.NORTH)
-            elif choice == 'east':
-                self.move_player(Adventure.EAST)
-            elif choice == 'south':
-                self.move_player(Adventure.SOUTH)
-            elif choice == 'west':
-                self.move_player(Adventure.WEST)
-            # handle interaction choice
-            else:
-                items = self.world.cells[self.player_y][self.player_x].items
-                chest, key, pool = None, None, None
-                for it in items:
-                    if isinstance(it, item.Chest):
-                        chest = it
-                    elif isinstance(it, item.Key):
-                        key = it
-                    elif isinstance(it, item.RadiantPool):
-                        pool = it
-                # if interacting with a chest, see if there are any keys that unlock it
-                if choice == 'chest':
-                    for it in self.player.backpack:
-                        if isinstance(it, item.Key):
-                            if chest.unlocked_by(it):
-                                self.won = True
-                    if not self.won:
-                        print('\tYou need a key to unlock this chest.')
-                # interacting with a key picks it up
-                elif choice == 'key':
-                    print('\tYou picked up the key.')
-                    self.player.backpack.append(key)
-                    self.world.cells[self.player_y][self.player_x].items.remove(key)
-                # a pool heals the player for a specified number of points
-                elif choice == 'radiant pool':
-                    hp = self.player.hp
-                    pool.cleanse(self.player)
-                    print('\tYou healed for', self.player.hp - hp,'hit points.')
-                else:
-                    print('Interacting with \'' + choice + '\'s is not supported.')
-                    continue
-
-            break # exit when a valid choice has been made
+        # handle movement choice
+        if choice == 'north':
+            self.move_player(Adventure.NORTH)
+        elif choice == 'east':
+            self.move_player(Adventure.EAST)
+        elif choice == 'south':
+            self.move_player(Adventure.SOUTH)
+        elif choice == 'west':
+            self.move_player(Adventure.WEST)
+        # handle interaction choice
+        else:
+            items = self.world.cells[self.player_y][self.player_x].items
+            chest, key, pool = None, None, None # possible items to interact with on the cell
+            for it in items:
+                if isinstance(it, item.Chest):
+                    chest = it
+                elif isinstance(it, item.Key):
+                    key = it
+                elif isinstance(it, item.RadiantPool):
+                    pool = it
+            # if interacting with a chest, see if the player has any keys that unlock it
+            if choice == 'chest':
+                for it in self.player.backpack:
+                    if isinstance(it, item.Key):
+                        if chest.unlocked_by(it):
+                            self.won = True
+                if not self.won:
+                    Client.sendMessage('need key') # inform Android that the player does not have the right key
+            # interacting with a key picks it up
+            elif choice == 'key':
+                # print('\tYou picked up the key.')
+                self.player.backpack.append(key)
+                self.world.cells[self.player_y][self.player_x].items.remove(key) # remove the key from the cell once player picks it up
+            # a pool heals the player for a specified number of points
+            elif choice == 'radiant pool':
+                pool.cleanse(self.player)
+                Client.sendMessage('hp:'+str(self.player.hp)) # inform Android of new HP
 
     def visit_combat(self):
         ''' visit_combat performs combat for the current cell '''
@@ -207,7 +194,7 @@ class Adventure:
         self.visit_action(opt)
 
 def main():
-    class_name = Client.sendMessage('What class?')
+    class_name = Client.sendMessage('What class?') # expecting 'figher' or 'wizard'
     adv = Adventure('map1.txt', class_name)
     adv.start()
 main()
