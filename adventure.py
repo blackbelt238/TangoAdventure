@@ -1,6 +1,7 @@
 import die
 import item
 from adventurer import Adventurer
+from client import Client
 from map import Map
 
 class Adventure:
@@ -206,6 +207,7 @@ class Adventure:
         self.visit_action(opt)
 
 def main():
-    adv = Adventure('map1.txt', 'fighter')
+    class_name = Client.sendMessage('What class?')
+    adv = Adventure('map1.txt', class_name)
     adv.start()
 main()
