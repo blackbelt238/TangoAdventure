@@ -163,21 +163,9 @@ class Adventure:
         ''' visit_options presents the player with all post-combat options '''
         opt = self.travel_options() # directions player can travel from current location
 
-        # output possible directions
-        print('\nYou see a path to the', opt[0].capitalize(), end='')
-        for i in range(1, len(opt)):
-            print(',', opt[i].capitalize(), end = '')
-        print('.')
-
         # output items
-        if len(self.world.cells[self.player_y][self.player_x].items) > 0:
-            print('On the ground in front of you is a ', end='')
-            for i, item in enumerate(self.world.cells[self.player_y][self.player_x].items):
-                if i > 0:
-                    print(',', end=' ')
-                opt.append(str(item))
-                print(str(item).title(), end='')
-            print('.')
+        for i, item in enumerate(self.world.cells[self.player_y][self.player_x].items):
+            opt.append(str(item))
 
         # prompt user and take action
         self.visit_action(opt)
