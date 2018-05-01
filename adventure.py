@@ -132,9 +132,8 @@ class Adventure:
                     Client.sendMessage('run:F') # tell Android run was not successful
 
             # player attack phase
-            choice = Client.sendMessage('target') # ask Android for a valid target
-
-            target = self.world.cells[self.player_y][self.player_x].get_npc_by_name(choice)
+            # choice = Client.sendMessage('target') # ask Android for a valid target
+            target = self.world.cells[self.player_y][self.player_x].get_npc_by_name(targets[0]) # step 2 only allows 1 opponent per cell
             player_dmg = self.player.roll_damage()
             Client.sendMessage('dealt:'+str(player_dmg))
 
