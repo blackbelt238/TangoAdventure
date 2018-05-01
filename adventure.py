@@ -164,7 +164,7 @@ class Adventure:
         opt = self.travel_options() # directions player can travel from current location
 
         # output items
-        for i, item in enumerate(self.world.cells[self.player_y][self.player_x].items):
+        for item in self.world.cells[self.player_y][self.player_x].items:
             opt.append(str(item))
 
         # prompt user and take action
