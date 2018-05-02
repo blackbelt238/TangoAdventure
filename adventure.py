@@ -170,7 +170,8 @@ class Adventure:
         self.visit_action(opt)
 
 def main():
-    class_name = Client.sendMessage('What class?') # expecting 'figher' or 'wizard'
+    class_name = Client.sendMessage('class') # expecting 'figher' or 'wizard'
+    print('starting the adventure with a', class_name)
     adv = Adventure('map1.txt', class_name)
     adv.start()
 main()
