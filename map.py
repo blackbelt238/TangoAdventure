@@ -1,12 +1,15 @@
 from character import Character
 from collections import defaultdict
+import die
 import item
 
 class Map:
     ''' Map represents a location for an adventurer to navigate '''
     def __init__(self, filename):
-        self.cells = None       # create the place to put the Map
-        self.init_map(filename) # populate the map
+        self.cells = None        # create the place to put the Map
+        self.max_id = 0          # the largest cell_id for the map being read in; needed for random placement
+        self.npc_locs_avail = [] # all possible locations for NPCs to occupy; needed for random placement
+        self.init_map(filename)  # populate the map
 
     def __str__(self):
         ''' the string representation of a map is just the cell ids arranged in grid form '''
@@ -48,9 +51,16 @@ class Map:
         for row in range(len(self.cells)):
             cell_info = map_file.readline().split() # get information from file for this row
             for col in range(len(self.cells[row])):
+                # track the largest possible cell number for the map being read in
+                try:
+                    if int(cell_info[col]) > self.max_id:
+                        self.max_id = int(cell_info[col])
+                    self.npc_locs_avail.append(cell_info[col])
+                except:
+                    pass
                 self.cells[row][col] = Cell(cell_info[col]) # instantiate a Cell with the id logged in the cell_info
 
-        info = Map.read_map_info(map_file) # get all the information to be added to the map (chars, items, etc.)
+        info = self.read_map_info(map_file) # get all the information to be added to the map (chars, items, etc.)
         map_file.close()                   # close the map file
         self.populate_map(info)            # populate the map with the infomration from the file
 
@@ -73,7 +83,7 @@ class Map:
                         if new_info == 'start':
                             self.cells[row][col].start = True
 
-    def read_map_info(map_file):
+    def read_map_info(self, map_file):
         ''' read_map_info reads the remainder of the map file to extract the information to be added to the map '''
         info = defaultdict(list) # all information to be added to the map
 
@@ -89,6 +99,11 @@ class Map:
             # extract the type of information we are adding to the cell from the information
             t = map_line.split('|')
             info_type, map_line = t[0], t[1] # remove the remaining bracket for data integrity
+            if cell_num == '?' and info_type == 'character':
+                cell_num = self.npc_locs_avail[die.roll(len(self.npc_locs_avail)-1)]
+                self.npc_locs_avail.remove(cell_num)
+            elif cell_num == '?':
+                cell_num = str(die.roll(self.max_id))
 
             # based on the type of the information to add, build the information
             if info_type == 'character':
@@ -116,7 +131,6 @@ class Map:
             else:
                 # directly add any other info
                 new_info = info_type
-
             info[cell_num].append(new_info) # add the new information
             map_line = map_file.readline()
         return info
@@ -157,7 +171,7 @@ class Cell:
 
 # NOTE: can remove main after testing is complete
 # def main():
-#     m = Map('map1.txt')
+#     m = Map('map2.txt')
 #     print(m, end='')
 #
 # main()
