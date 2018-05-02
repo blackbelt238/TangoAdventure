@@ -172,6 +172,6 @@ class Adventure:
 def main():
     class_name = Client.sendMessage('class') # expecting 'figher' or 'wizard'
     print('starting the adventure with a', class_name)
-    adv = Adventure('map1.txt', class_name)
+    adv = Adventure('adventure/map1.txt', class_name)
     adv.start()
 main()
