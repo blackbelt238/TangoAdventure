@@ -87,7 +87,8 @@ class Adventure:
                 if isinstance(it, item.Chest):
                     chest = it
                 elif isinstance(it, item.Key):
-                    key = it
+                    self.player.backpack.append(it)                                 # keys are automatically picked up
+                    self.world.cells[self.player_y][self.player_x].items.remove(it) # remove the key from the cell once player picks it up
                 elif isinstance(it, item.RadiantPool):
                     pool = it
             # if interacting with a chest, see if the player has any keys that unlock it
@@ -99,10 +100,10 @@ class Adventure:
                 if not self.won:
                     Client.sendMessage('need key') # inform Android that the player does not have the right key
             # interacting with a key picks it up
-            elif choice == 'key':
-                # print('\tYou picked up the key.')
-                self.player.backpack.append(key)
-                self.world.cells[self.player_y][self.player_x].items.remove(key) # remove the key from the cell once player picks it up
+            # elif choice == 'key':
+            #     print('\tYou picked up the key.')
+            #     self.player.backpack.append(key)
+            #     self.world.cells[self.player_y][self.player_x].items.remove(key) # remove the key from the cell once player picks it up
             # a pool heals the player for a specified number of points
             elif choice == 'radiant pool':
                 pool.cleanse(self.player)
