@@ -124,6 +124,7 @@ class Adventure:
         while len(self.world.cells[self.player_y][self.player_x].npcs) > 0:
             # player acts first
             choice = Client.sendMessage('hp:'+str(self.player.hp)) # expect 'attack' or 'run'
+            print('\tcombat choice:\'' + choice +'\'')
             if choice == 'run':
                 # player has a 75% chance to successfully run
                 if die.roll(4) > 1:
@@ -142,7 +143,7 @@ class Adventure:
             # if the target dies as a result of the damage, remove it from the cell and from list of possible targets
             if not target.take_damage(player_dmg):
                 self.world.cells[self.player_y][self.player_x].npcs.remove(target)
-                targets.remove(choice)
+                targets.remove(target)
                 Client.sendMessage('gained:'+str(target.xp_worth()))
 
             # NPC attack phase
