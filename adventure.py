@@ -73,7 +73,7 @@ class Adventure:
 
         # set up items for interaction
         items = self.world.cells[self.player_y][self.player_x].items
-        chest, key, pool = None, None, None # possible items to interact with on the cell
+        chest, pool = None, None # possible items to interact with on the cell
         for it in items:
             if isinstance(it, item.Chest):
                 chest = it
