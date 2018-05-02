@@ -2,7 +2,6 @@ import die
 import item
 from adventurer import Adventurer
 from map import Map
-from playerbot import Playerbot
 
 class Adventure:
     # changes to a 'current' location to go a specific direction
@@ -13,7 +12,6 @@ class Adventure:
 
     def __init__(self, map_file_name, class_name):
         self.player = Adventurer('Tango', class_name) # default character
-        self.bot = Playerbot()                        # the robot the player will interact with
         self.player_x = 0                             # player's current x-coord
         self.player_y = 0                             # player's current y-coord
         self.world = Map(map_file_name)               # load the given map as the world for the adventure
@@ -31,8 +29,6 @@ class Adventure:
         ''' move_player alters the player's location based on the given modifier '''
         self.player_x += loc_mod[0]
         self.player_y += loc_mod[1]
-
-        self.bot.move(loc_mod)
 
         # if the player moves onto a road, take the road in the same direction until a visitable cell is reached
         if self.world.cells[self.player_y][self.player_x].is_road():
@@ -139,7 +135,6 @@ class Adventure:
             print(enemy, end=' ')
             targets.append(str(enemy).lower())
         print('enters combat with you.')
-        self.bot.encounter()
 
         # as long as there are combatants, fight
         while len(self.world.cells[self.player_y][self.player_x].npcs) > 0:
@@ -163,7 +158,6 @@ class Adventure:
 
             target = self.world.cells[self.player_y][self.player_x].get_npc_by_name(choice)
             player_dmg = self.player.roll_damage()
-            self.bot.hit()
             print('\t\tDealt',player_dmg, 'damage to',target)
 
             # if the target dies as a result of the damage, remove it from the cell
