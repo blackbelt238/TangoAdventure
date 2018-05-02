@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">TangoController</string>
+    <string name="text_nothing">Nothing Here</string>
+
+    <string name="enemy_pic">Enemy Portrait</string>
+
+    <string name="say_message">message</string>
+
+    <string name="kws_caption">Keyword to start is \"Tango\"</string>
+    <string name="menu_caption">Say command, start, or continue</string>
+    <string name="command_caption">Say one of the following commands: drive, turn</string>
+    <string name="pi_ip">10.200.33.236</string>
+</resources>

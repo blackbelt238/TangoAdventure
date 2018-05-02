@@ -1,0 +1,21 @@
+#JSGF V1.0;
+
+grammar command;
+
+<primary_command> = [add] (/11/ <drive> | /10/ <turn> | /1/ <speak>);
+
+<speak> = speak hello there;
+
+<drive> = drive <direction> <digit>;
+
+<turn> = turn <turn_dir> <angle>;
+
+<turn_dir> = left | right;
+
+<angle> = forty-five | ninety;
+
+<direction> = forward | backward;
+
+<digit> = one | two | three | four | five;
+
+public <command> = <primary_command>;
