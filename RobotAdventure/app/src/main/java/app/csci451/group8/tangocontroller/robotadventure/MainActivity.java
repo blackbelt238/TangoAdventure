@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     GameServer server;
 
     private String enemyName;
+    private boolean inCombat;
 
     TextView enemyNameText;
 
@@ -53,8 +54,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String KWS_SEARCH = "wakeup";
     private static final String MENU_SEARCH = "menu";
     private static final String SENDCOMMAND = "command";
-    private static final String CONTINUE = "continue";
-    private static final String START = "start";
 
     /* Keyword we are looking for to activate menu */
     private static final String KEYPHRASE = "tango";
@@ -126,9 +125,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         disableAllActions();
+        actions.clear();
         String buttonText = ((Button) findViewById(view.getId())).getText().toString();
         if (buttonText.equals("pool")) {
             speak("Healed to full hit points");
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         server.uiCommand = buttonText;
     }
@@ -187,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void startBattle(String enemyName) {
         toggleButtonState(true);
+        inCombat = true;
         disableAllActions();
 
         this.enemyName = enemyName;
@@ -215,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void endCombat(String endCondition) {
+        inCombat = false;
         if (endCondition.contains("died")) {
             speak("You are dead.");
             try {
@@ -365,9 +372,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String searchName = recognizer.getSearchName();
             System.out.println(searchName);
 
-            if (searchName != null && (searchName.equals(KWS_SEARCH) || searchName.equals(START) || searchName.equals(CONTINUE))) {
-                Client client = new Client("10.200.3.99", 5011, text);
-                client.execute();
+            if (searchName != null && (searchName.equals(KWS_SEARCH))) {
+                if (actions.contains(text)) {
+                    server.uiCommand = text;
+                }
+
+                if (inCombat && text.equalsIgnoreCase("attack") || text.equalsIgnoreCase("run")) {
+                    server.uiCommand = text;
+                }
+
             }
 
             makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
@@ -427,8 +440,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         File menuGrammar = new File(assetsDir, "menu.gram");
         recognizer.addGrammarSearch(MENU_SEARCH, menuGrammar);
 
-        File commandGrammar = new File(assetsDir, "command.gram");
-        recognizer.addGrammarSearch(SENDCOMMAND, commandGrammar);
+//        File commandGrammar = new File(assetsDir, "command.gram");
+//        recognizer.addGrammarSearch(SENDCOMMAND, commandGrammar);
 
 //        // Create grammar-based search for digit recognition
 //        File digitsGrammar = new File(assetsDir, "digits.gram");
