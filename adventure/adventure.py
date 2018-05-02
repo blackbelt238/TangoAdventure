@@ -29,6 +29,7 @@ class Adventure:
         ''' move_player alters the player's location based on the given modifier '''
         self.player_x += loc_mod[0]
         self.player_y += loc_mod[1]
+
         # if the player moves onto a road, take the road in the same direction until a visitable cell is reached
         if self.world.cells[self.player_y][self.player_x].is_road():
             self.move_player(loc_mod)
