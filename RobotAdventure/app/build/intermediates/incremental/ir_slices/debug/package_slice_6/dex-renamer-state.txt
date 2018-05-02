@@ -1,0 +1,4 @@
+#Wed May 02 02:21:59 MDT 2018
+base.0=C\:\\Users\\thema_000\\Documents\\S2018\\CSCI451\\TangoBot\\Android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\51
+path.0=classes.dex
+renamed.0=classes.dex
