@@ -209,6 +209,6 @@ class Adventure:
         self.visit_action(opt)
 
 def main():
-    adv = Adventure('map1.txt', 'fighter')
+    adv = Adventure('map2.txt', 'fighter')
     adv.start()
 main()
