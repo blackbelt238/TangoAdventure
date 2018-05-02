@@ -73,7 +73,6 @@ class Playerbot:
     def turn_90(self, direction):
         ''' turn 90 makes a turn in 90 degree increments '''
         change = Playerbot.diff_dir(direction, self.cur_dir) # determine the change Tango must make to face the correct direction
-        print('###############change:', change)
         turn_dir = 0                                         # direction to turn (-1 for left, 1 for right)
 
         # based on the
@@ -100,19 +99,16 @@ class Playerbot:
             if Playerbot.same_dir(self.cur_dir, Playerbot.WEST):
                 turn_dir = -turn_dir
         else:
-            print("ERROR:", direction, "does not match an expected direction
-        print('###############change:', change)
+            print("ERROR:", direction, "does not match an expected direction")
 
         if turn_dir < 0:
             turn_dir = False
-            print('###############turning left')
         elif turn_dir > 0:
             turn_dir = True
-            print('###############turning right')
         else:
             print("ERROR:", turn_dir, "does not imply a direction for turning")
 
         self.tango.turn(turn_dir)
-        time.sleep(1)
+        time.sleep(1.6)
         self.tango.stop()
-        self.cur_dir = add_dir(change, self.cur_dir)
+        self.cur_dir = Playerbot.add_dir(change, self.cur_dir)
