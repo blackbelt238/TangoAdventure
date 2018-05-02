@@ -2,6 +2,7 @@ import die
 import item
 from adventurer import Adventurer
 from map import Map
+from tango import Tango
 
 class Adventure:
     # changes to a 'current' location to go a specific direction
@@ -12,6 +13,7 @@ class Adventure:
 
     def __init__(self, map_file_name, class_name):
         self.player = Adventurer('Tango', class_name) # default character
+        self.tango = Tango()                          # the robot that will interact with the player
         self.player_x = 0                             # player's current x-coord
         self.player_y = 0                             # player's current y-coord
         self.world = Map(map_file_name)               # load the given map as the world for the adventure
