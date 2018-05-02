@@ -69,6 +69,7 @@ class Adventure:
         ''' visit_action handles the user's choice of action '''
         # ask Android for user's choice. no validation necessary because Android will only present user with valid options
         choice = Client.sendMessage('action:'+str(opt))
+        print("\taction choice:", choice)
 
         # handle movement choice
         if choice == 'north':
@@ -144,10 +145,10 @@ class Adventure:
                 targets.remove(choice)
                 Client.sendMessage('gained:'+str(target.xp_worth()))
 
-            # all NPCs hit
+            # NPC attack phase
             for npc in self.world.cells[self.player_y][self.player_x].npcs:
                 npc_dmg = npc.roll_damage()
-                Client.sendMessage(str(npc)+':'+str(npc_dmg)) # tell Android how much damage player was dealt and include the source
+                Client.sendMessage('recv:'+str(npc_dmg)) # tell Android how much damage player was dealt to the player
                 if not self.player.take_damage(npc_dmg):
                     return False
         return True
