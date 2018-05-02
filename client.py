@@ -2,7 +2,7 @@ import socket
 
 class Client:
     ''' Client allows the sending of messages to a server address '''
-    saddr = ('10.200.29.121', 5011) # server address using the local machine name
+    saddr = ('10.200.34.7', 5011) # server address using the local machine name
 
     def sendMessage(message):
         ''' sendMessage takes in a message, sends it to the server at saddr, and returns the response '''
