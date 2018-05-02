@@ -71,6 +71,19 @@ class Adventure:
         choice = Client.sendMessage('action:'+str(opt))
         print("\taction choice:", choice)
 
+        # set up items for interaction
+        items = self.world.cells[self.player_y][self.player_x].items
+        chest, key, pool = None, None, None # possible items to interact with on the cell
+        for it in items:
+            if isinstance(it, item.Chest):
+                chest = it
+            elif isinstance(it, item.Key):
+                self.player.backpack.append(it)                                 # keys are automatically picked up
+                self.world.cells[self.player_y][self.player_x].items.remove(it) # remove the key from the cell once player picks it up
+                print('\t***********PICKED UP KEY******************')
+            elif isinstance(it, item.RadiantPool):
+                pool = it
+
         # handle movement choice
         if choice == 'north':
             self.move_player(Adventure.NORTH)
@@ -82,16 +95,6 @@ class Adventure:
             self.move_player(Adventure.WEST)
         # handle interaction choice
         else:
-            items = self.world.cells[self.player_y][self.player_x].items
-            chest, key, pool = None, None, None # possible items to interact with on the cell
-            for it in items:
-                if isinstance(it, item.Chest):
-                    chest = it
-                elif isinstance(it, item.Key):
-                    self.player.backpack.append(it)                                 # keys are automatically picked up
-                    self.world.cells[self.player_y][self.player_x].items.remove(it) # remove the key from the cell once player picks it up
-                elif isinstance(it, item.RadiantPool):
-                    pool = it
             # if interacting with a chest, see if the player has any keys that unlock it
             if choice == 'chest':
                 for it in self.player.backpack:
@@ -100,15 +103,9 @@ class Adventure:
                             self.won = True
                 if not self.won:
                     Client.sendMessage('need key') # inform Android that the player does not have the right key
-            # interacting with a key picks it up
-            # elif choice == 'key':
-            #     print('\tYou picked up the key.')
-            #     self.player.backpack.append(key)
-            #     self.world.cells[self.player_y][self.player_x].items.remove(key) # remove the key from the cell once player picks it up
             # a pool heals the player for a specified number of points
-            elif choice == 'radiant pool':
+            elif choice == 'pool':
                 pool.cleanse(self.player)
-                Client.sendMessage('hp:'+str(self.player.hp)) # inform Android of new HP
 
     def visit_combat(self):
         ''' visit_combat performs combat for the current cell '''
@@ -143,7 +140,7 @@ class Adventure:
             # if the target dies as a result of the damage, remove it from the cell and from list of possible targets
             if not target.take_damage(player_dmg):
                 self.world.cells[self.player_y][self.player_x].npcs.remove(target)
-                targets.remove(target)
+                targets.remove(target.name)
                 Client.sendMessage('gained:'+str(target.xp_worth()))
 
             # NPC attack phase
