@@ -25,7 +25,7 @@ class Key(Item):
 
 class RadiantPool(Item):
     def __init__(self, amount):
-        Item.__init__(self, 'radiant pool')
+        Item.__init__(self, 'pool')
         self.amount = amount
 
     def cleanse(self, character):

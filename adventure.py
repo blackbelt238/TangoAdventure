@@ -69,6 +69,20 @@ class Adventure:
         ''' visit_action handles the user's choice of action '''
         # ask Android for user's choice. no validation necessary because Android will only present user with valid options
         choice = Client.sendMessage('action:'+str(opt))
+        print("\taction choice:", choice)
+
+        # set up items for interaction
+        items = self.world.cells[self.player_y][self.player_x].items
+        chest, pool = None, None # possible items to interact with on the cell
+        for it in items:
+            if isinstance(it, item.Chest):
+                chest = it
+            elif isinstance(it, item.Key):
+                self.player.backpack.append(it)                                 # keys are automatically picked up
+                self.world.cells[self.player_y][self.player_x].items.remove(it) # remove the key from the cell once player picks it up
+                print('\t***********PICKED UP KEY******************')
+            elif isinstance(it, item.RadiantPool):
+                pool = it
 
         # handle movement choice
         if choice == 'north':
@@ -81,15 +95,6 @@ class Adventure:
             self.move_player(Adventure.WEST)
         # handle interaction choice
         else:
-            items = self.world.cells[self.player_y][self.player_x].items
-            chest, key, pool = None, None, None # possible items to interact with on the cell
-            for it in items:
-                if isinstance(it, item.Chest):
-                    chest = it
-                elif isinstance(it, item.Key):
-                    key = it
-                elif isinstance(it, item.RadiantPool):
-                    pool = it
             # if interacting with a chest, see if the player has any keys that unlock it
             if choice == 'chest':
                 for it in self.player.backpack:
@@ -98,15 +103,9 @@ class Adventure:
                             self.won = True
                 if not self.won:
                     Client.sendMessage('need key') # inform Android that the player does not have the right key
-            # interacting with a key picks it up
-            elif choice == 'key':
-                # print('\tYou picked up the key.')
-                self.player.backpack.append(key)
-                self.world.cells[self.player_y][self.player_x].items.remove(key) # remove the key from the cell once player picks it up
             # a pool heals the player for a specified number of points
-            elif choice == 'radiant pool':
+            elif choice == 'pool':
                 pool.cleanse(self.player)
-                Client.sendMessage('hp:'+str(self.player.hp)) # inform Android of new HP
 
     def visit_combat(self):
         ''' visit_combat performs combat for the current cell '''
@@ -122,14 +121,15 @@ class Adventure:
         while len(self.world.cells[self.player_y][self.player_x].npcs) > 0:
             # player acts first
             choice = Client.sendMessage('hp:'+str(self.player.hp)) # expect 'attack' or 'run'
+            print('\tcombat choice:\'' + choice +'\'')
             if choice == 'run':
                 # player has a 75% chance to successfully run
                 if die.roll(4) > 1:
-                    Client.sendMessage('run:T') # tell Android run was successful
+                    Client.sendMessage('run:true') # tell Android run was successful
                     self.determine_start()      # teleport the player off to a starting location
                     break
                 else:
-                    Client.sendMessage('run:F') # tell Android run was not successful
+                    Client.sendMessage('run:false') # tell Android run was not successful
 
             # player attack phase
             # choice = Client.sendMessage('target') # ask Android for a valid target
@@ -140,13 +140,13 @@ class Adventure:
             # if the target dies as a result of the damage, remove it from the cell and from list of possible targets
             if not target.take_damage(player_dmg):
                 self.world.cells[self.player_y][self.player_x].npcs.remove(target)
-                targets.remove(choice)
+                targets.remove(target.name)
                 Client.sendMessage('gained:'+str(target.xp_worth()))
 
-            # all NPCs hit
+            # NPC attack phase
             for npc in self.world.cells[self.player_y][self.player_x].npcs:
                 npc_dmg = npc.roll_damage()
-                Client.sendMessage(str(npc)+':'+str(npc_dmg)) # tell Android how much damage player was dealt and include the source
+                Client.sendMessage('recv:'+str(npc_dmg)) # tell Android how much damage player was dealt to the player
                 if not self.player.take_damage(npc_dmg):
                     return False
         return True
@@ -170,7 +170,8 @@ class Adventure:
         self.visit_action(opt)
 
 def main():
-    class_name = Client.sendMessage('What class?') # expecting 'figher' or 'wizard'
+    class_name = Client.sendMessage('class') # expecting 'figher' or 'wizard'
+    print('starting the adventure with a', class_name)
     adv = Adventure('map1.txt', class_name)
     adv.start()
 main()
