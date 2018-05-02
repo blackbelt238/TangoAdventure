@@ -10,6 +10,8 @@ class Tango:
     SIDE = 3 # head moving side-to-side
     UPDOWN = 4 # head moving up/down
 
+    LEFT_SHOULDER = 12
+
     CENTER = 6000 # where the Tango bot's joints are centered and speed is at 0
     TO_EXT = 3000 # the farthest from self.CENTER the joints and speed can go
 
@@ -56,6 +58,11 @@ class Tango:
         self.center(self.WAIST)
         self.center(self.SIDE)
         self.center(self.UPDOWN)
+        self.tango.head(False, Tango.LEFT_SHOULDER)
+        self.tango.head(False, Tango.LEFT_SHOULDER)
+        self.tango.head(False, Tango.LEFT_SHOULDER)
+        self.tango.head(False, Tango.LEFT_SHOULDER)
+        self.tango.head(False, Tango.LEFT_SHOULDER)
 
     def speak(self, phrase):
         ''' speak sends the given message to Android to convert to speech '''
