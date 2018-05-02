@@ -1,0 +1,19 @@
+5,5
+1 _ 2 _ 3
+# # _ # _
+4 _ 5 # 6
+_ # _ # #
+7 # 8 _ 9
+1:start|
+3:start|
+7:start|
+9:start|
+?:item|chest 1
+?:character|4 1 4 0 deer
+?:character|4 1 4 0 deer
+?:character|4 1 4 0 deer
+?:character|4 1 4 0 deer
+?:character|6 1 13 2 snake
+?:character|4 2 11 2 pony
+?:item|key 1
+?:item|radiantpool 10
