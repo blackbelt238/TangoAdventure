@@ -127,11 +127,11 @@ class Adventure:
             if choice == 'run':
                 # player has a 75% chance to successfully run
                 if die.roll(4) > 1:
-                    Client.sendMessage('run:T') # tell Android run was successful
+                    Client.sendMessage('run:true') # tell Android run was successful
                     self.determine_start()      # teleport the player off to a starting location
                     break
                 else:
-                    Client.sendMessage('run:F') # tell Android run was not successful
+                    Client.sendMessage('run:false') # tell Android run was not successful
 
             # player attack phase
             # choice = Client.sendMessage('target') # ask Android for a valid target
